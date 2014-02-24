@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Around me</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="location_by_network">Trying to get location by network</string>
+    <string name="error_get_links">Error during getting images links</string>
+    <string name="error_internet_connection">Please check your internet connection</string>
+
+</resources>
