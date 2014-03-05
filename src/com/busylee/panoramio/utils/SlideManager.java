@@ -10,6 +10,7 @@ public class SlideManager extends ImageFetcher {
 	public final static int OFF_PRELODER = 0;
 
 	private ImageSwitcher mImageSwitcher;
+	private Image currentImage = null;
 	private int mShowTime = 500;
 	private Handler mHandler;
 	private boolean mRun = true;
@@ -34,8 +35,17 @@ public class SlideManager extends ImageFetcher {
 		mShowTime = showTime;
 	}
 	
-	public void setImageSwitcher(ImageSwitcher mImageSwitcher) {
-		this.mImageSwitcher = mImageSwitcher;
+	public void updateImageSwitcher(ImageSwitcher imageSwitcher){
+		setImageSwitcher(imageSwitcher);
+		if(currentImage != null)
+			if (currentImage.isReady())
+				showImage(currentImage.getDrawable());
+			else 
+				showPreloader();
+	}
+	
+	protected void setImageSwitcher(ImageSwitcher imageSwitcher) {
+		this.mImageSwitcher = imageSwitcher;
 	}
 
 	public void startSlideShow(){
@@ -71,13 +81,13 @@ public class SlideManager extends ImageFetcher {
 	
 	private void slideNext(){
 		boolean preloader = false; 
-		final Image image = nextImage();
-		if (!image.isReady()){
+		currentImage = nextImage();
+		if (!currentImage.isReady()){
 			showPreloader();
 			preloader = true;
 		}
 		
-		while(!image.isReady()){
+		while(!currentImage.isReady()){
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
@@ -88,7 +98,7 @@ public class SlideManager extends ImageFetcher {
 		if (preloader)
 			offPreloader();
 		
-		showImage(image.getDrawable());
+		showImage(currentImage.getDrawable());
 		
 		try {
 			Thread.sleep(mShowTime);

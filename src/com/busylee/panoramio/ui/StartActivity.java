@@ -1,13 +1,15 @@
 package com.busylee.panoramio.ui;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -16,7 +18,7 @@ import android.widget.Toast;
 
 import com.busylee.panoramio.R;
 
-public class StartActivity extends Activity implements OnSeekBarChangeListener,
+public class StartActivity extends FragmentActivity implements OnSeekBarChangeListener,
 		OnClickListener {
 
 	private TextView mTvDurationValue, mTvCountValue;
@@ -25,6 +27,8 @@ public class StartActivity extends Activity implements OnSeekBarChangeListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
 
 		setContentView(R.layout.activity_start);
 		initializeViews();
@@ -48,10 +52,10 @@ public class StartActivity extends Activity implements OnSeekBarChangeListener,
 	public void onProgressChanged(SeekBar seekBar, int progress,
 			boolean fromUser) {
 		if (seekBar.getId() == R.id.sbDuration) {
-			int duration = SlideActivity.DEF_DURATION + progress;
+			int duration = SlideFragment.DEF_DURATION + progress;
 			mTvDurationValue.setText(String.valueOf(duration));
 		} else if (seekBar.getId() == R.id.sbCount) {
-			int count = SlideActivity.DEF_COUNT + progress;
+			int count = SlideFragment.DEF_COUNT + progress;
 			mTvCountValue.setText(String.valueOf(count));
 		}
 	}
@@ -83,11 +87,26 @@ public class StartActivity extends Activity implements OnSeekBarChangeListener,
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
-		Intent intent = new Intent(this, SlideActivity.class);
-		intent.putExtra(SlideActivity.EXTRA_DURATION, mSbDuration.getProgress()
-				+ SlideActivity.DEF_DURATION);
-		intent.putExtra(SlideActivity.EXTRA_COUNT, mSbCount.getProgress()
-				+ SlideActivity.DEF_COUNT);
-		startActivity(intent);
+		
+		showSLideFragment();
+	}
+	
+	protected void showSLideFragment(){
+		FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+		
+		fTrans.replace(R.id.flSlideFrame,getSlideFragmentInstance(mSbDuration.getProgress()
+				+ SlideFragment.DEF_DURATION, mSbCount.getProgress()
+				+ SlideFragment.DEF_COUNT));
+		
+		fTrans.commit();
+	}
+	
+	protected SlideFragment getSlideFragmentInstance(int duration, int count){
+		SlideFragment sfSlider = new SlideFragment();
+		Bundle args = new Bundle();
+	    args.putInt(SlideFragment.ARGUMENT_DURATION, duration);
+	    args.putInt(SlideFragment.ARGUMENT_COUNT, count);
+	    sfSlider.setArguments(args);
+	    return sfSlider;
 	}
 }

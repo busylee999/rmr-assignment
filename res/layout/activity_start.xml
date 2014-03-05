@@ -57,7 +57,7 @@
         android:id="@+id/sbCount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="25" />
+        android:max="195" />
 
     <Button
         android:id="@+id/btnStart"
@@ -65,5 +65,12 @@
         android:layout_height="wrap_content"
         android:text="Start slideshow"
         android:textColor="#ffffff" />
+
+    <FrameLayout
+        android:id="@+id/flSlideFrame"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent" >
+
+    </FrameLayout>
 
 </LinearLayout>

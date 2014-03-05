@@ -23,7 +23,6 @@ public class ImagePool {
 		
 		if (!mIterator.hasNext())
 			mIterator = mImagePool.iterator();
-		
 		return mIterator.next();
 	}
 	
